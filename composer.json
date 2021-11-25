@@ -1,8 +1,8 @@
 {
-  "name": "amazing/rockets",
-  "description": "A website that sells amazing rockets",
+  "name": "whoosh/website",
+  "description": "A website that sells Whoosh rockets",
   "scripts": {
-    "serve": "php -S 127.0.0.1:8000"
+    "serve": "php -S 127.0.0.1:8000 -t public"
   },
   "autoload": {
     "psr-4": {
