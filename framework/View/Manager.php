@@ -19,6 +19,14 @@ class Manager
     }
     public function render(string $template, array $data = []): string
     {
-        // Will render the Template Later
+        foreach ($this->engines as $extension => $engine) {
+            foreach ($this->paths as $path) {
+                $file = "{$path}/{$template}.{$extension}";
+                if (is_file($file)) {
+                    return $engine->render($file, $data);
+                }
+            }
+        }
+        throw new Exception("Could not render '{$view}'");
     }
 }
