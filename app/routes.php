@@ -3,7 +3,7 @@
 use Framework\Routing\Router;
 
 return function(Router $router) {
-    $router->add('GET', '/', fn() => 'hello world');
+    $router->add('GET', '/', fn() => view('home', ['number' => 42]),);
 
     $router->add('GET', '/old-home', fn() => $router->redirect('/'));
 
