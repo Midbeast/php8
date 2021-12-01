@@ -29,4 +29,16 @@ class Manager
         }
         throw new Exception("Could not render '{$view}'");
     }
+    public function resolve(string $template, array $data = []): View
+    {
+        foreach ($this->engines as $extension => $engine) {
+            foreach ($this->paths as $path) {
+                $file = "{$path}/{$template}.{$extension}";
+                if (is_file($file)) {
+                    return new View($engine, realpath($file), $data);
+                }
+            }
+        }
+        throw new Exception("Could not resolve '{$template}'");
+    }
 }

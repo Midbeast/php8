@@ -17,6 +17,6 @@ if (!function_exists('view')) {
             $manager->addEngine('basic.php', new View\Engine\BasicEngine());
             $manager->addEngine('php', new View\Engine\PhpEngine());
         }
-        return $manager->render($template, $data);
+        return $manager->resolve($template, $data);
     }
 }
