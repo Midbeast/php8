@@ -36,6 +36,11 @@ class AdvancedEngine implements Engine
     }
     protected function compile(string $template): string
     {
+        // replace `@extends` with `$this->extends`
+        $template = preg_replace_callback('#@extends\(([^)]+)\)#',
+            function($matches) {
+                return '<?php $this->extends(' . $matches[1] . '); ?>';
+            }, $template);
         return $template;
     }
     protected function extends(string $template): static
