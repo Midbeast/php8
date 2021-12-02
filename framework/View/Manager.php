@@ -1,12 +1,16 @@
 <?php
 
 namespace Framework\View;
+
+use Closure;
 use Exception;
 use Framework\View\Engine\Engine;
+use Framework\View\View;
 class Manager
 {
     protected array $paths = [];
     protected array $engines = [];
+    protected array $macros = [];
     public function addPath(string $path): static
     {
         array_push($this->paths, $path);
@@ -28,6 +32,22 @@ class Manager
             }
         }
         throw new Exception("Could not render '{$view}'");
+    }
+
+    public function addMacro(string $name, Closure $closure): static
+    {
+        $this->macros[$name] = $closure;
+        return $this;
+    }
+
+    public function useMacro(string $name, ...$values)
+    {
+        if (isset($this->macros[$name])) {
+
+            $bound = $this->macros[$name]->bindTo($this);
+            return $bound(...$values);
+        }
+        throw new Exception("Macro isn't defined: '{$name}'");
     }
     public function resolve(string $template, array $data = []): View
     {
