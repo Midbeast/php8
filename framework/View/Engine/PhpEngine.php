@@ -2,11 +2,13 @@
 
 namespace Framework\View\Engine;
 
+use Framework\View\Engine\HasManager;
 use Framework\View\View;
 use function view;
 
 class PhpEngine implements Engine
 {
+    use HasManager;
     protected $layouts = [];
 
     public function render(View $view): string
@@ -26,9 +28,13 @@ class PhpEngine implements Engine
         return $contents;
     }
 
-    protected function escape(string $content): string
+    // protected function escape(string $content): string
+    // {
+    // return htmlspecialchars($content);
+    // }
+    public function __call(string $name, $values)
     {
-        return htmlspecialchars($content);
+        return $this->manager->useMacro($name, ...$values);
     }
 
     protected function extends(string $template): static

@@ -19,6 +19,7 @@ class Manager
     public function addEngine(string $extension, Engine $engine): static
     {
         $this->engines[$extension] = $engine;
+        $this->engines[$extension]->setManager($this);
         return $this;
     }
     public function render(string $template, array $data = []): string
