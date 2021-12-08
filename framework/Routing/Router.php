@@ -5,6 +5,8 @@ namespace Framework\Routing;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
 use Throwable;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run;
 
 class Router
 {
