@@ -26,27 +26,25 @@ class Router
     public function dispatch()
     {
         $paths = $this->paths();
-
         $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
         $requestPath = $_SERVER['REQUEST_URI'] ?? '/';
-
         $matching = $this->match($requestMethod, $requestPath);
-
         if ($matching) {
             $this->current = $matching;
-
             try {
                 return $matching->dispatch();
             }
             catch (Throwable $e) {
+                $whoops = new Run();
+                $whoops->pushHandler(new PrettyPageHandler());
+                $whoops->register();
+                throw $e;
                 return $this->dispatchError();
             }
         }
-        
         if (in_array($requestPath, $paths)) {
             return $this->dispatchNotAllowed();
         }
-        
         return $this->dispatchNotFound();
     }
 
