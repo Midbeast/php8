@@ -3,7 +3,7 @@
 namespace Framework\Routing;
 
 use Exception;
-use JetBrains\PhpStorm\NoReturn;
+use Framework\Validation\ValidationException;
 use Throwable;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
@@ -22,33 +22,45 @@ class Router
 
     public function errorHandler(int $code, callable $handler)
     {
-        $this->errorHandler[$code] = $handler;
+        $this->errorHandlers[$code] = $handler;
     }
 
     public function dispatch()
     {
         $paths = $this->paths();
+
         $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
         $requestPath = $_SERVER['REQUEST_URI'] ?? '/';
+
         $matching = $this->match($requestMethod, $requestPath);
+
         if ($matching) {
             $this->current = $matching;
+
             try {
                 return $matching->dispatch();
             }
             catch (Throwable $e) {
+                if ($e instanceof ValidationException) {
+                    $_SESSION['errors'] = $e->getErrors();
+                    return redirect($_SERVER['HTTP_REFERER']);
+                }
+
                 if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'dev') {
                     $whoops = new Run();
-                    $whoops->pushHandler(new PrettyPageHandler());
+                    $whoops->pushHandler(new PrettyPageHandler);
                     $whoops->register();
                     throw $e;
                 }
+
                 return $this->dispatchError();
             }
         }
+
         if (in_array($requestPath, $paths)) {
             return $this->dispatchNotAllowed();
         }
+
         return $this->dispatchNotFound();
     }
 
@@ -81,31 +93,28 @@ class Router
 
     public function dispatchNotAllowed()
     {
-        $this->errorHandler[400] ??= fn() => 'not allowed';
-        return $this->errorHandler[400]();
+        $this->errorHandlers[400] ??= fn() => 'not allowed';
+        return $this->errorHandlers[400]();
     }
 
     public function dispatchNotFound()
     {
-        $this->errorHandler[404] ??= fn() => 'not found';
-        return $this->errorHandler[404]();
+        $this->errorHandlers[404] ??= fn() => 'not found';
+        return $this->errorHandlers[404]();
     }
 
     public function dispatchError()
     {
-        $this->errorHandler[500] ??= fn() => 'server error';
-        return $this->errorHandler[500]();
+        $this->errorHandlers[500] ??= fn() => 'server error';
+        return $this->errorHandlers[500]();
     }
 
-    #[NoReturn] public function redirect($path)
+    public function redirect($path)
     {
         header("Location: {$path}", $replace = true, $code = 301);
         exit;
     }
 
-    /**
-     * @throws Exception
-     */
     public function route(string $name, array $parameters = []): string
     {
         foreach ($this->routes as $route) {
