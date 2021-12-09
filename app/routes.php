@@ -1,9 +1,11 @@
 <?php
 
 use Framework\Routing\Router;
+use App\Http\Controllers\ShowHomePageController;
+
 
 return function(Router $router) {
-    $router->add('GET', '/', fn() => view('home', ['number' => 42]),);
+    $router->add('GET', '/', fn() => [ShowHomePageController::class, 'handle'],);
 
     $router->add('GET', '/old-home', fn() => $router->redirect('/'));
 
