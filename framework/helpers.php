@@ -26,3 +26,25 @@ if (!function_exists('view')) {
         return $manager->resolve($template, $data);
     }
 }
+
+if (!function_exists('redirect')) {
+    function redirect(string $url)
+    {
+        header("Location: {$url}");
+        exit;
+    }
+}
+
+if (!function_exists('validate')) {
+    function validate(array $data, array $rules)
+    {
+        static $manager;
+        if (!$manager) {
+            $manager = new Validation\Manager();
+            $manager->addRule('required', new Validation\Rule\RequiredRule());
+            $manager->addRule('email', new Validation\Rule\EmailRule());
+            $manager->addRule('min', new Validation\Rule\MinRule());
+        }
+        return $manager->validate($data, $rules);
+    }
+}

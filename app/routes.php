@@ -30,4 +30,13 @@ return function(Router $router) {
         'GET', '/services/view/{service?}',
         [new ShowServiceController($router), 'handle'],
     )->name('show-service');
+
+    $router->add(
+        'GET', '/register',
+        [new ShowRegisterFormController($router), 'handle'],
+    )->name('show-register-form');
+    $router->add(
+        'POST', '/register',
+        [new RegisterUserController($router), 'handle'],
+    )->name('register-user');
 };
