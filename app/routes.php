@@ -1,54 +1,33 @@
 <?php
 
-use Framework\Routing\Router;
 use App\Http\Controllers\ShowHomePageController;
-
+use App\Http\Controllers\Products\ListProductsController;
+use App\Http\Controllers\Products\ShowProductController;
+use App\Http\Controllers\Services\ShowServiceController;
+use Framework\Routing\Router;
 
 return function(Router $router) {
-    $router->add('GET', '/', fn() => [ShowHomePageController::class, 'handle'],);
+    $router->add(
+        'GET', '/',
+        [ShowHomePageController::class, 'handle'],
+    )->name('show-home-page');
 
-    $router->add('GET', '/old-home', fn() => $router->redirect('/'));
-
-    $router->add('GET', '/has-server-error',fn() => throw new Exception('This is just a Test!'));
-
-    $router->add('GET', '/has-validation-error',fn() => $router->dispatchNotAllowed());
-
-    $router->errorHandler(404, fn() => 'whoops!');
+    $router->errorHandler(
+        404, fn() => 'whoops!'
+    );
 
     $router->add(
         'GET', '/products/view/{product}',
-        function () use ($router) {
-            $parameters = $router->current()->parameters();
-            return view('products/view', [
-                'product' => $parameters['product'],
-                'scary' => '<script>alert("boo!")</script>',
-            ]);
-        },
-    );
+        [new ShowProductController($router), 'handle'],
+    )->name('view-product');
 
     $router->add(
         'GET', '/products/{page?}',
-        function () use ($router) {
-            $parameters = $router->current()->parameters();
-            $parameters['page'] ??= 1;
-
-            $next = $router->route(
-                'product-list', ['page' => $parameters['page'] + 1]
-            );
-
-            return "products for page {$parameters['page']}, next page is {$next}";
-        },
-    )->name('product-list');
+        [new ListProductsController($router), 'handle'],
+    )->name('list-products');
 
     $router->add(
         'GET', '/services/view/{service?}',
-        function () use ($router) {
-            $parameters = $router->current()->parameters();
-
-            if (empty($parameters['service'])) {
-                return 'all services';  
-            }
-            return "service is {$parameters['service']}";  
-        },
-    );
+        [new ShowServiceController($router), 'handle'],
+    )->name('show-service');
 };
