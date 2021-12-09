@@ -7,7 +7,7 @@ return function(Router $router) {
 
     $router->add('GET', '/old-home', fn() => $router->redirect('/'));
 
-    $router->add('GET', '/has-server-error',fn() => throw new Exception());
+    $router->add('GET', '/has-server-error',fn() => throw new Exception('This is just a Test!'));
 
     $router->add('GET', '/has-validation-error',fn() => $router->dispatchNotAllowed());
 
