@@ -28,7 +28,7 @@ class Manager
                     [$name, $params] = explode(':', $rule);
                     $params = explode(',', $params);
                 }
-
+                
                 $processor = $this->rules[$name];
 
                 if (!$processor->validate($data, $field, $params)) {

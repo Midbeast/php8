@@ -56,11 +56,11 @@ class Router
                 return $this->dispatchError();
             }
         }
-
+        
         if (in_array($requestPath, $paths)) {
             return $this->dispatchNotAllowed();
         }
-
+        
         return $this->dispatchNotFound();
     }
 

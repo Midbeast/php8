@@ -16,9 +16,11 @@ class ShowServiceController
     public function handle()
     {
         $parameters = $this->router->current()->parameters();
+
         if (empty($parameters['service'])) {
-            return 'all services';
+            return 'all services';  
         }
+    
         return "service is {$parameters['service']}";
     }
 }

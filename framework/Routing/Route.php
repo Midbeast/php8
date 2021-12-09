@@ -10,10 +10,11 @@ class Route
     protected array $parameters = [];
     protected ?string $name = null;
 
-    public function add(string $method, string $path, $handler): Route
+    public function __construct(string $method, string $path, $handler)
     {
-        $route = $this->routes[] = new Route($method, $path, $handler);
-        return $route;
+        $this->method = $method;
+        $this->path = $path;
+        $this->handler = $handler;
     }
 
     public function method(): string
@@ -31,11 +32,11 @@ class Route
         return $this->parameters;
     }
 
-    public function name(string $name = null): string
+    public function name(string $name = null)
     {
         if ($name) {
             $this->name = $name;
-            return $this->name;
+            return $this;
         }
 
         return $this->name;
@@ -109,11 +110,14 @@ class Route
     {
         if (is_array($this->handler)) {
             [$class, $method] = $this->handler;
+
             if (is_string($class)) {
                 return (new $class)->{$method}();
             }
+
             return $class->{$method}();
         }
+
         return call_user_func($this->handler);
     }
 }

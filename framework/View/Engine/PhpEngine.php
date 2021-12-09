@@ -9,32 +9,28 @@ use function view;
 class PhpEngine implements Engine
 {
     use HasManager;
+
     protected $layouts = [];
 
     public function render(View $view): string
     {
         extract($view->data);
+
         ob_start();
         include($view->path);
         $contents = ob_get_contents();
         ob_end_clean();
+
         if ($layout = $this->layouts[$view->path] ?? null) {
             $contentsWithLayout = view($layout, array_merge(
                 $view->data,
                 ['contents' => $contents],
             ));
+
             return $contentsWithLayout;
         }
-        return $contents;
-    }
 
-    // protected function escape(string $content): string
-    // {
-    // return htmlspecialchars($content);
-    // }
-    public function __call(string $name, $values)
-    {
-        return $this->manager->useMacro($name, ...$values);
+        return $contents;
     }
 
     protected function extends(string $template): static
@@ -44,9 +40,8 @@ class PhpEngine implements Engine
         return $this;
     }
 
-    protected function includes(string $template, $data = []): void
+    public function __call(string $name, $values)
     {
-        print view($template, $data);
+        return $this->manager->useMacro($name, ...$values);
     }
-
 }
