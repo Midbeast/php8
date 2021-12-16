@@ -2,6 +2,7 @@
 <h1 class="text-xl font-semibold mb-4">Register</h1>
 <form
     method="post"
+    enctype="multipart/form-data"
     action="{{ $router->route('register-user') }}"
     class="flex flex-col w-full space-y-4"
 >
@@ -42,6 +43,17 @@
             name="password"
             type="password"
             class="focus:outline-none focus:border-blue-300 border-b-2 border-gray-300"
+        />
+    </label>
+
+    <label for="upload" class="flex flex-col w-full">
+        <span class="flex">Image Upload:</span>
+        <input
+                id="upload"
+                name="upload"
+                type="file"
+                accept=".png, .jpg, .jpeg"
+                class="focus:outline-none focus:border-blue-300 border-b-2 border-gray-300"
         />
     </label>
     <button

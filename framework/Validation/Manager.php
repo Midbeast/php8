@@ -28,16 +28,17 @@ class Manager
                     [$name, $params] = explode(':', $rule);
                     $params = explode(',', $params);
                 }
-                
                 $processor = $this->rules[$name];
 
-                if (!$processor->validate($data, $field, $params)) {
-                    if (!isset($errors[$field])) {
-                        $errors[$field] = [];
+                if($processor){
+                    if (!$processor->validate($data, $field, $params)) {
+                        if (!isset($errors[$field])) {
+                            $errors[$field] = [];
+                        }
+                        array_push($errors[$field], $processor->getMessage($data, $field, $params));
                     }
-
-                    array_push($errors[$field], $processor->getMessage($data, $field, $params));
                 }
+
             }
         }
 

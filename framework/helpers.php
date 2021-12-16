@@ -48,11 +48,11 @@ if (!function_exists('validate')) {
             $manager = new Validation\Manager();
 
             // let's add the rules that come with the framework
+            $manager->addRule('upload', new Validation\Rule\UploadRule());
             $manager->addRule('required', new Validation\Rule\RequiredRule());
             $manager->addRule('email', new Validation\Rule\EmailRule());
             $manager->addRule('min', new Validation\Rule\MinRule());
         }
-
         return $manager->validate($data, $rules);
     }
 }
