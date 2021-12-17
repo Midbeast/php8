@@ -8,6 +8,7 @@ class UploadRule implements Rule
 {
     public function validate(array $data, string $field, array $params)
     {
+        clearstatcache();
         if (empty($_FILES[$field])) {
             return false;
         }
@@ -18,20 +19,26 @@ class UploadRule implements Rule
 
         $maxMBSize = (int) $params[0];
 
-        //get file size
-        $file = $_FILES[$field];
-        $fileSize = $file['size'];
+        $filepath = $_FILES[$field]['tmp_name'];
+        $fileSize = filesize($filepath);
+        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+        $filetype = finfo_file($fileInfo, $filepath);
 
-        //convert fileSize to MB
-        $fileSize = $fileSize / 1024 / 1024;
+        $allowedTypes = [
+            'image/png' => 'png',
+            'image/jpg' => 'jpg',
+            'image/jpeg' => 'jpg'
+        ];
 
-        //round fileSize to 2 decimal places
-        $fileSize = round($fileSize, 2);
-
-        if($maxMBSize < $fileSize){
+        if (!array_key_exists($filetype, $allowedTypes)) {
             return false;
         }
-        return true;
+
+        $fileSize = $fileSize / 1024 / 1024;
+
+        $fileSize = round($fileSize, 2);
+
+        return $maxMBSize >= $fileSize;
     }
 
     public function getMessage(array $data, string $field, array $params)
