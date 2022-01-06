@@ -2,6 +2,7 @@
 
 namespace Framework\Database\Connection;
 
+use Framework\Database\Migration\SqliteMigration;
 use Framework\Database\QueryBuilder\SqliteQueryBuilder;
 use InvalidArgumentException;
 use Pdo;
@@ -25,9 +26,19 @@ class SqliteConnection extends Connection
     {
         return $this->pdo;
     }
-
+    
     public function query(): SqliteQueryBuilder
     {
         return new SqliteQueryBuilder($this);
+    }
+
+    public function createTable(string $table): SqliteMigration
+    {
+        return new SqliteMigration($this, $table, 'create');
+    }
+
+    public function alterTable(string $table): SqliteMigration
+    {
+        return new SqliteMigration($this, $table, 'alter');
     }
 }

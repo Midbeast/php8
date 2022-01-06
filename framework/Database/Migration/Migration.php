@@ -57,6 +57,6 @@ abstract class Migration
         return $field;
     }
 
-    abstract public function connection(): Connection;
     abstract public function execute();
+    abstract public function dropColumn(string $name): static;
 }
