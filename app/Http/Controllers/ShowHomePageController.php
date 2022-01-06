@@ -16,20 +16,20 @@ class ShowHomePageController
             return new MysqlConnection($config);
         });
 
-        $connection = $factory->connect([
-            'type' => 'mysql',
-            'host' => 'localhost',
-            'port' => '9005',
-            'database' => 'php_book',
-            'username' => 'root',
-            'password' => 'root',
-        ]);
+        $factory->addConnector('sqlite', function($config) {
+            return new SqliteConnection($config);
+        });
 
+        $config = require __DIR__ . '/../../../config/database.php';
+
+        $connection = $factory->connect($config[$config['default']]);
+        
         $product = $connection
             ->query()
             ->select()
             ->from('products')
             ->first();
+
         return view('home', [
             'number' => 42,
             'featured' => $product,
