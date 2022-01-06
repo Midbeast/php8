@@ -24,7 +24,7 @@ class NameCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(strtoupper($input->getArgument('name') ?: 'Stranger'));
-
+        
         return Command::SUCCESS;
     }
 }
