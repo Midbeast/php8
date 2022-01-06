@@ -17,4 +17,9 @@ abstract class Connection
      * Start a new query on this connection
      */
     abstract public function query(): QueryBuilder;
+
+    /**
+     * Start a new migration
+     */
+    abstract public function createTable(string $table): Migration;
 }

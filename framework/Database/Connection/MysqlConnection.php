@@ -2,6 +2,7 @@
 
 namespace Framework\Database\Connection;
 
+use Framework\Database\Migration\Migration;
 use Framework\Database\QueryBuilder\MysqlQueryBuilder;
 use InvalidArgumentException;
 use Pdo;
@@ -35,5 +36,10 @@ class MysqlConnection extends Connection
     public function query(): MysqlQueryBuilder
     {
         return new MysqlQueryBuilder($this);
+    }
+
+    public function createTable(string $table): Migration
+    {
+        return new MysqlMigration($this, $table, 'create');
     }
 }
