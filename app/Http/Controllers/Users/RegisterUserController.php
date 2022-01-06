@@ -18,7 +18,6 @@ class RegisterUserController
         secure();
 
         $data = validate($_POST, [
-            'upload' => ['upload:1'],
             'name' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required', 'min:10'],

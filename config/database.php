@@ -5,10 +5,10 @@ return [
     'mysql' => [
         'type' => 'mysql',
         'host' => '127.0.0.1',
-        'port' => '9005',
-        'database' => 'php_book',
+        'port' => '3306',
+        'database' => 'pro-php-mvc',
         'username' => 'root',
-        'password' => 'root',
+        'password' => '',
     ],
     'sqlite' => [
         'type' => 'sqlite',

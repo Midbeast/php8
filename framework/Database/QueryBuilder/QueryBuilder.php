@@ -104,7 +104,7 @@ abstract class QueryBuilder
     }
 
     /**
-     * Indicate the query type is a "select" and remember
+     * Indicate the query type is a "select" and remember 
      * which fields should be returned by the query
      */
     public function select(string $columns = '*'): static

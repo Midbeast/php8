@@ -15,13 +15,10 @@ class MinRule implements Rule
         if (empty($params[0])) {
             throw InvalidArgumentException('specify a min length');
         }
-        $minLength = (int) $params[0];
-        $currentLength = strlen($data[$field]);
 
-        if($currentLength < $minLength) {
-            return false;
-        }
-        return true;
+        $length = (int) $params[0];
+
+        strlen($data[$field]) >= $length;
     }
 
     public function getMessage(array $data, string $field, array $params)
