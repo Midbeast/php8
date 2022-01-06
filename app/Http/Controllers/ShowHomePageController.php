@@ -18,11 +18,11 @@ class ShowHomePageController
 
         $connection = $factory->connect([
             'type' => 'mysql',
-            'host' => '127.0.0.1',
-            'port' => '3306',
-            'database' => 'pro-php-mvc',
+            'host' => 'localhost',
+            'port' => '9005',
+            'database' => 'php_book',
             'username' => 'root',
-            'password' => '',
+            'password' => 'root',
         ]);
 
         $product = $connection
